@@ -2,7 +2,7 @@
     "name": "shopify-language-sync",
     "version": "1.0.0",
     "description": "Tool to synchronise a Shopify them live translation with a local translation file.",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
         "test": "jest --config jestconfig.json",
         "prebuild": "yarn lint && yarn format",
@@ -47,6 +47,6 @@
         "typescript": "^3.9.7"
     },
     "bin": {
-        "locales-sync": "./dist/cli.js"
+        "locales-sync": "dist/cli.js"
     }
 }
