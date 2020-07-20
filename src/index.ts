@@ -5,7 +5,8 @@ import figures from 'figures';
 import themeKit from '@shopify/themekit';
 import minimist from 'minimist';
 import dotenv from 'dotenv';
-import { JsonData, RecursiveUpdate } from './types/types';
+import { JsonData } from './types/types';
+import { getJsonStructureWithData } from './utilities/utilities';
 const argv = minimist(process.argv.slice(2));
 const dir = './tmp';
 
@@ -70,33 +71,11 @@ async function updateLocale(): Promise<void> {
     const liveVersion: JsonData = JSON.parse(rawLiveVersion.toString());
 
     // Load the current translation structure, we want to push this structure without overwriting any values that have been updated by the client in Shopify
-    const rawNewSchema: Buffer = await fs.readFileSync('./src/locales/en.default.json');
-    const newSchema: JsonData = JSON.parse(rawNewSchema.toString());
+    const rawNewStructure: Buffer = await fs.readFileSync('./src/locales/en.default.json');
+    const newStructure: JsonData = JSON.parse(rawNewStructure.toString());
 
     // We get a new json with the structure from the translations in the src directory mapped with the current values in Shopify
-    const finalResult: JsonData = recursiveUpdate(newSchema, liveVersion);
+    const finalResult: JsonData = getJsonStructureWithData(newStructure, liveVersion);
     await fs.writeFileSync('./dist/locales/en.default.json', JSON.stringify(finalResult));
     console.log(chalk.magenta(`\n${figures.heart}  Translations structure updated. \n`));
 }
-
-// json1: one is the file with the structure we need
-// json2 is the file with the up to date content for the file
-// At the end the structure from json1 is kept, any objects deleted from json1 are not returned. Any objects existing in json2 are replaced in the final response
-export const recursiveUpdate: RecursiveUpdate = (structureJson, dataJson) => {
-    const newJson: JsonData = {};
-    if (typeof structureJson === 'object') {
-        Object.keys(structureJson).forEach((key) => {
-            if (structureJson[key].constructor === Object) {
-                newJson[key] = recursiveUpdate(
-                    structureJson[key] as JsonData,
-                    dataJson[key] ? (dataJson[key] as JsonData) : (structureJson[key] as JsonData),
-                );
-            } else {
-                newJson[key] = dataJson[key] ? dataJson[key] : structureJson[key];
-            }
-        });
-        return newJson;
-    } else {
-        return dataJson;
-    }
-};
