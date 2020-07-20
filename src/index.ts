@@ -5,7 +5,7 @@ import figures from 'figures';
 import themeKit from '@shopify/themekit';
 import minimist from 'minimist';
 import dotenv from 'dotenv';
-import { JsonData } from './types/types';
+import { JsonData, Init } from './types/types';
 import { getJsonStructureWithData } from './utilities/utilities';
 const argv = minimist(process.argv.slice(2));
 const dir = './tmp';
@@ -17,7 +17,7 @@ interface Flags {
     env?: string;
 }
 
-export const init = () => {
+export const init: Init = () => {
     // Load env variables
     if (argv.env) {
         dotenv.config({ path: `.env.${argv.env}` });
@@ -57,6 +57,7 @@ async function pullTranslations(): Promise<void> {
                 console.log(chalk.yellow('\n[locales-sync] Translations downloaded...\n'));
                 updateLocale();
             })
+            // eslint-disable-next-line
             .catch((e: any) => {
                 console.error(e);
             });
