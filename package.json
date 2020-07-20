@@ -1,0 +1,45 @@
+{
+    "name": "shopify-language-sync",
+    "version": "1.0.0",
+    "description": "Tool to synchronise a Shopify them live translation with a local translation file.",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest --config jestconfig.json",
+        "build": "tsc",
+        "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+        "lint": "tslint -p tsconfig.json"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dnpg/shopify-language-sync.git"
+    },
+    "keywords": [
+        "Shopify",
+        "Translation",
+        "Tool"
+    ],
+    "author": "Diego Pelaez",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/dnpg/shopify-language-sync/issues"
+    },
+    "homepage": "https://github.com/dnpg/shopify-language-sync#readme",
+    "devDependencies": {
+        "@shopify/themekit": "^1.1.4",
+        "@types/jest": "^26.0.5",
+        "@types/minimist": "^1.2.0",
+        "chalk": "^4.1.0",
+        "dotenv": "^8.2.0",
+        "figures": "^3.2.0",
+        "jest": "^26.1.0",
+        "minimist": "^1.2.5",
+        "prettier": "^2.0.5",
+        "ts-jest": "^26.1.3",
+        "tslint": "^6.1.2",
+        "tslint-config-prettier": "^1.18.0",
+        "typescript": "^3.9.7"
+    }
+}
