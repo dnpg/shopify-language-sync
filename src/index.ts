@@ -6,9 +6,11 @@ import themeKit from '@shopify/themekit';
 import minimist from 'minimist';
 import dotenv from 'dotenv';
 import { JsonData, Init } from './types/types';
-import { getJsonStructureWithData } from './utilities/utilities';
+import { getJsonStructureWithData, writeFileSyncRecursive } from './utilities/utilities';
 const argv = minimist(process.argv.slice(2));
-const dir = './tmp';
+const tmpDir = './tmp';
+let srcDir = './src/locales';
+let destDir = './dist/locales';
 
 interface Flags {
     password?: string;
@@ -25,12 +27,19 @@ export const init: Init = () => {
         dotenv.config({ path: '.env' });
     }
 
+    if (argv.srcDir) {
+        srcDir = argv.srcDir;
+    }
+    if (argv.destDir) {
+        destDir = argv.destDir;
+    }
+
     // Create tmp dir if not exitent
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+    if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir);
     }
     // To prevent a warning that the config.yml file doesn't exist
-    fs.writeFileSync(`${dir}/config.yml`, '');
+    fs.writeFileSync(`${tmpDir}/config.yml`, '');
     pullTranslations();
 };
 
@@ -46,15 +55,15 @@ async function pullTranslations(): Promise<void> {
             .command(
                 'download',
                 {
-                    files: ['locales/en.default.json'],
+                    files: ['locales/*.*'],
                     ...flags,
                 },
                 {
-                    cwd: path.join(process.cwd(), '/tmp'),
+                    cwd: path.join(process.cwd(), tmpDir),
                 },
             )
             .then(() => {
-                console.log(chalk.yellow('\n[locales-sync] Translations downloaded...\n'));
+                console.log(chalk.yellow('\n[locales-sync] Translations downloaded.'));
                 updateLocale();
             })
             // eslint-disable-next-line
@@ -67,16 +76,34 @@ async function pullTranslations(): Promise<void> {
 }
 
 async function updateLocale(): Promise<void> {
-    // Load the translation that lives in Shopify containing the up to date values (This is the one the client updates from Shopify's backend).
-    const rawLiveVersion: Buffer = await fs.readFileSync('./tmp/locales/en.default.json');
-    const liveVersion: JsonData = JSON.parse(rawLiveVersion.toString());
+    try {
+        // Get the files as an array
+        const files = await fs.promises.readdir(`${tmpDir}/locales`);
 
-    // Load the current translation structure, we want to push this structure without overwriting any values that have been updated by the client in Shopify
-    const rawNewStructure: Buffer = await fs.readFileSync('./src/locales/en.default.json');
-    const newStructure: JsonData = JSON.parse(rawNewStructure.toString());
+        // Loop them all with the new for...of
+        for (const file of files) {
+            // Get the full paths
+            const tmpFilePath = path.join(`${tmpDir}/locales`, file);
+            const srcFilePath = path.join(srcDir, file);
+            const distFilePath = path.join(destDir, file);
 
-    // We get a new json with the structure from the translations in the src directory mapped with the current values in Shopify
-    const finalResult: JsonData = getJsonStructureWithData(newStructure, liveVersion);
-    await fs.writeFileSync('./dist/locales/en.default.json', JSON.stringify(finalResult));
-    console.log(chalk.magenta(`\n${figures.heart}  Translations structure updated. \n`));
+            // Load the translation that lives in Shopify containing the up to date values (This is the one the client updates from Shopify's backend).
+            const rawLiveVersion: Buffer = await fs.readFileSync(tmpFilePath);
+            const liveVersion: JsonData = JSON.parse(rawLiveVersion.toString());
+
+            // Load the current translation structure, we want to push this structure without overwriting any values that have been updated by the client in Shopify
+            const rawNewStructure: Buffer = await fs.readFileSync(srcFilePath);
+            const newStructure: JsonData = JSON.parse(rawNewStructure.toString());
+
+            // We get a new json with the structure from the translations in the src directory mapped with the current values in Shopify
+            const finalResult: JsonData = getJsonStructureWithData(newStructure, liveVersion);
+            await writeFileSyncRecursive(distFilePath, JSON.stringify(finalResult));
+            console.log(chalk.yellow(`\n${file} Translation structure updated ${distFilePath}.`));
+        } // End for...of
+
+        console.log(chalk.magenta(`\n${figures.heart} All Translations structures updated. \n`));
+    } catch (e) {
+        // Catch anything bad that happens
+        console.error("We've thrown! Whoops!", e);
+    }
 }
