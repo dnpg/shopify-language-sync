@@ -5,9 +5,10 @@
     "main": "index.js",
     "scripts": {
         "test": "jest --config jestconfig.json",
+        "prebuild": "yarn lint && yarn format",
         "build": "tsc",
-        "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-        "lint": "tslint -p tsconfig.json"
+        "format": "prettier --write 'src/**/*.ts'",
+        "lint": "eslint --fix './src/**/*.ts'"
     },
     "files": [
         "dist/**/*"
@@ -30,16 +31,22 @@
     "devDependencies": {
         "@shopify/themekit": "^1.1.4",
         "@types/jest": "^26.0.5",
-        "@types/minimist": "^1.2.0",
+        "@typescript-eslint/eslint-plugin": "^3.6.1",
+        "@typescript-eslint/parser": "^3.6.1",
         "chalk": "^4.1.0",
         "dotenv": "^8.2.0",
+        "eslint": "^7.5.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-prettier": "^3.1.4",
         "figures": "^3.2.0",
         "jest": "^26.1.0",
         "minimist": "^1.2.5",
+        "@types/minimist": "^1.2.0",
         "prettier": "^2.0.5",
         "ts-jest": "^26.1.3",
-        "tslint": "^6.1.2",
-        "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.9.7"
+    },
+    "bin": {
+        "locales-sync": "./dist/cli.js"
     }
 }
