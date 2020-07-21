@@ -1,5 +1,5 @@
 {
-    "name": "dnpg/shopify-language-sync",
+    "name": "shopify-language-sync",
     "version": "1.0.0",
     "description": "Tool to synchronise a Shopify them live translation with a local translation file.",
     "main": "dist/index.js",
