@@ -22,7 +22,11 @@ export const getJsonStructureWithData: RecursiveUpdate = (structureJson, dataJso
     }
 };
 
-export async function writeFileSyncRecursive(filename: string, content: string, charset = 'utf8') {
+export const writeFileSyncRecursive: (filename: string, content: string, charset: string) => void = async (
+    filename,
+    content = '',
+    charset = 'utf8',
+) => {
     // -- normalize path separator to '/' instead of path.sep,
     // -- as / works in node for Windows as well, and mixed \\ and / can appear in the path
     let filepath = filename.replace(/\\/g, '/');
@@ -51,5 +55,7 @@ export async function writeFileSyncRecursive(filename: string, content: string, 
     );
 
     // -- write file
-    await fs.writeFileSync(root + filepath, content, charset);
-}
+    if (filepath.includes('.')) {
+        await fs.writeFileSync(root + filepath, content, charset);
+    }
+};
