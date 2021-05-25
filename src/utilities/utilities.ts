@@ -22,7 +22,7 @@ export const getJsonStructureWithData: RecursiveUpdate = (structureJson, dataJso
     }
 };
 
-export const writeFileSyncRecursive: (filename: string, content: string, charset: string) => void = async (
+export const writeFileSyncRecursive: (filename: string, content: string, charset?: string) => void = async (
     filename,
     content = '',
     charset = 'utf8',
