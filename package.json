@@ -1,7 +1,7 @@
 {
     "name": "shopify-language-sync",
-    "version": "1.0.4",
-    "description": "Tool to synchronise a Shopify them live translation with a local translation file.",
+    "version": "2.0.0",
+    "description": "Tool to synchronise a Shopify them live translation with a local translation file. This tools works for slate and themekit projects",
     "main": "dist/index.js",
     "scripts": {
         "test": "jest --config jestconfig.json",
@@ -30,6 +30,7 @@
     "homepage": "https://github.com/dnpg/shopify-language-sync#readme",
     "dependencies": {
         "@shopify/themekit": "^1.1.4",
+        "browserslist": "^4.16.5",
         "chalk": "^4.1.0",
         "dotenv": "^8.2.0",
         "figures": "^3.2.0",
@@ -37,6 +38,7 @@
     },
     "devDependencies": {
         "@types/jest": "^26.0.5",
+        "@types/js-yaml": "^4.0.0",
         "@types/minimist": "^1.2.0",
         "@typescript-eslint/eslint-plugin": "^3.6.1",
         "@typescript-eslint/parser": "^3.6.1",
@@ -44,6 +46,7 @@
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-prettier": "^3.1.4",
         "jest": "^26.1.0",
+        "js-yaml": "^4.0.0",
         "prettier": "^2.0.5",
         "ts-jest": "^26.1.3",
         "typescript": "^3.9.7"
