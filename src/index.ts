@@ -95,6 +95,8 @@ export const init: Init = () => {
     // Create tmp dir if not exitent
     if (!fs.existsSync(tmpDir)) {
         fs.mkdirSync(tmpDir);
+    } else if (fs.existsSync(`${tmpDir}/locales`)) {
+        fs.rmdirSync(`${tmpDir}/locales`, { recursive: true });
     }
     // To prevent a warning that the config.yml file doesn't exist
     fs.writeFileSync(`${tmpDir}/config.yml`, '');

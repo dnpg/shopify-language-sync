@@ -94,6 +94,9 @@ exports.init = () => {
     if (!fs_1.default.existsSync(tmpDir)) {
         fs_1.default.mkdirSync(tmpDir);
     }
+    else if (fs_1.default.existsSync(`${tmpDir}/locales`)) {
+        fs_1.default.rmdirSync(`${tmpDir}/locales`, { recursive: true });
+    }
     // To prevent a warning that the config.yml file doesn't exist
     fs_1.default.writeFileSync(`${tmpDir}/config.yml`, '');
     pullTranslations();
