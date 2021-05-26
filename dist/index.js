@@ -138,6 +138,7 @@ function updateLocale() {
                 const tmpFilePath = path_1.default.join(`${tmpDir}/locales`, file);
                 let srcFilePath = path_1.default.join(srcDir, file);
                 const distFilePath = path_1.default.join(destDir, file);
+                console.log(chalk_1.default.yellow(`\n[locales-sync] Mapping file: ${file}.`));
                 // Load the translation that lives in Shopify containing the up to date values (This is the one the client updates from Shopify's backend).
                 const rawLiveVersion = yield fs_1.default.readFileSync(tmpFilePath);
                 const liveVersion = JSON.parse(rawLiveVersion.toString());
