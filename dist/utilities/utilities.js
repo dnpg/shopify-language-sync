@@ -21,7 +21,7 @@ exports.getJsonStructureWithData = (structureJson, dataJson) => {
     const newJson = {};
     if (typeof structureJson === 'object') {
         Object.keys(structureJson).forEach((key) => {
-            if (structureJson[key].constructor === Object) {
+            if (structureJson[key] && structureJson[key].constructor === Object) {
                 newJson[key] = exports.getJsonStructureWithData(structureJson[key], dataJson[key] ? dataJson[key] : structureJson[key]);
             }
             else {

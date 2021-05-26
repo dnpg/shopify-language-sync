@@ -7,7 +7,7 @@ export const getJsonStructureWithData: RecursiveUpdate = (structureJson, dataJso
     const newJson: JsonData = {};
     if (typeof structureJson === 'object') {
         Object.keys(structureJson).forEach((key) => {
-            if (structureJson[key].constructor === Object) {
+            if (structureJson[key] && structureJson[key].constructor === Object) {
                 newJson[key] = getJsonStructureWithData(
                     structureJson[key] as JsonData,
                     dataJson[key] ? (dataJson[key] as JsonData) : (structureJson[key] as JsonData),
